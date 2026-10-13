@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Customizable network topology diagram editor for NOC and GitHub Pages.">
+  <title>NOC Network Diagram Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">D</span><div><strong>NOC</strong><small>Network Diagram Studio</small></div></div>
+    <div class="top-actions">
+      <button id="newDiagramBtn" class="secondary">Reset diagram</button>
+      <button id="exportSvgBtn" class="secondary">Export SVG</button>
+      <button id="exportPngBtn" class="primary">Export PNG</button>
+    </div>
+  </header>
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Diagram tools</h2>
+        <p class="muted">Select a node on the canvas to edit it. Drag nodes to reposition them.</p>
+        <button id="addNodeBtn" class="primary full">＋ Add node</button>
+        <button id="connectBtn" class="secondary full">↔ Connect nodes</button>
+        <p id="toolStatus" class="status">Tool: Select / move</p>
+      </section>
+      <section class="panel">
+        <h2>Selected node</h2>
+        <div id="emptySelection" class="muted">Choose a node to edit its properties.</div>
+        <div id="nodeForm" hidden>
+          <label>Label<input id="nodeLabel" type="text" maxlength="80"></label>
+          <label>Category
+            <select id="nodeType">
+              <option value="network">Network / Cloud</option>
+              <option value="router">Router / Peer</option>
+              <option value="mikrotik">MikroTik Router (logo)</option>
+              <option value="exchange">IXP / Core</option>
+              <option value="service">Service / Platform</option>
+              <option value="server">Server / Infrastructure</option>
+              <option value="people">Customer / Eyeball</option>
+            </select>
+          </label>
+          <label>Accent color<input id="nodeColor" type="color" value="#00d6a3"></label>
+          <button id="deleteNodeBtn" class="danger full">Delete selected node</button>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Connection</h2>
+        <p class="muted">Choose a line to change its style, or use “Connect nodes” and click two nodes.</p>
+        <div id="emptyLink" class="muted">No connection selected.</div>
+        <div id="linkForm" hidden>
+          <label>Label<input id="linkLabel" type="text" maxlength="60" placeholder="eBGP / VLAN / Transit"></label>
+          <label>Line color<input id="linkColor" type="color" value="#00d6a3"></label>
+          <label>Line style
+            <select id="linkStyle"><option value="dashed">Dashed</option><option value="solid">Solid</option><option value="dotted">Dotted</option></select>
+          </label>
+          <button id="deleteLinkBtn" class="danger full">Delete connection</button>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Project files</h2>
+        <button id="saveJsonBtn" class="secondary full">Download diagram JSON</button>
+        <label class="file-label">Import diagram JSON<input id="loadJsonInput" type="file" accept=".json,application/json"></label>
+        <p class="muted small">This is a static app. Your diagram stays in your browser unless you export it.</p>
+      </section>
+    </aside>
+    <section class="workspace">
+      <div class="canvas-toolbar">
+        <div><strong id="diagramTitle">NOC ISP Topology</strong><span class="muted"> · Editable canvas</span></div>
+        <div class="canvas-actions"><button id="zoomOutBtn" title="Zoom out">−</button><button id="zoomResetBtn" title="Reset zoom">100%</button><button id="zoomInBtn" title="Zoom in">＋</button></div>
+      </div>
+      <div id="canvasWrap" class="canvas-wrap">
+        <svg id="diagram" viewBox="0 0 1200 650" role="img" aria-label="Editable network topology diagram">
+          <defs>
+            <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke="#3d4247" stroke-width="1"/></pattern>
+            <linearGradient id="coreGradient" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#1bd978"/><stop offset="1" stop-color="#00c8ee"/></linearGradient>
+          </defs>
+          <rect width="1200" height="650" fill="#303234"></rect>
+          <rect width="1200" height="650" fill="url(#grid)" opacity=".6"></rect>
+          <g id="edgesLayer"></g>
+          <g id="nodesLayer"></g>
+        </svg>
+      </div>
+      <footer><span id="canvasStatus">Ready · Drag nodes to customize your topology</span><span>NOC Network Diagram Studio · v1.0.0</span></footer>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
